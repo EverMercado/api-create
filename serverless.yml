@@ -1,0 +1,38 @@
+service: api-create
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  timeout: 30
+  stage: 'dev'
+  role: 'arn:aws:iam::XXXXXX:role/XXXXXX'
+  environment: 
+    DBPLANET: 'PLANETA'
+
+functions:          
+  crearNuevo:
+    handler: src/handler.crearNuevo
+    events:
+      - http:
+          path: /planeta
+          method: post
+          cors: true
+          
+  obtenerUno:
+    handler: src/handler.obtenerUno
+    events:
+      - http:
+          path: /planeta/{id}
+          method: get
+          cors: true
+         
+plugins:
+  - serverless-offline
+  - serverless-jest-plugin
+
+resources:
+  Resources:
+    ApiGatewayRestApi:
+      Type: "AWS::ApiGateway::RestApi"
+      Properties:
+        Name: "desa-APIPLANETA"
